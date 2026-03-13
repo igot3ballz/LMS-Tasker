@@ -10,6 +10,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import { exec, spawn, ChildProcess } from "child_process";
 import { promisify } from "util";
+import os from "os";
 
 const execAsync = promisify(exec);
 
@@ -18,8 +19,8 @@ const backgroundProcesses = new Map<number, { process: ChildProcess, command: st
 
 const server = new Server(
   {
-    name: "lms-system-agent-mcp",
-    version: "2.1.0",
+    name: "lms-tasker-mcp",
+    version: "2.2.0",
   },
   {
     capabilities: {
@@ -97,19 +98,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "stop_process",
-        description: "Kill a background process by its PID.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            pid: { type: "number", description: "The Process ID to kill" }
-          },
-          required: ["pid"],
-        },
+        name: "lms_status",
+        description: "Check if the LM Studio server is reachable and responsive.",
+        inputSchema: { type: "object", properties: {} },
       },
       {
-        name: "list_background_processes",
-        description: "List all currently active background processes started by this agent.",
+        name: "lms_start",
+        description: "Attempt to start the LM Studio application if it is not running.",
         inputSchema: { type: "object", properties: {} },
       }
     ],
@@ -152,62 +147,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "start_background_process": {
         const cmd = String(args?.command);
         const cwd = args?.cwd ? normalizePath(String(args.cwd)) : process.cwd();
-        
         const shell = process.platform === "win32" ? "powershell.exe" : "/bin/bash";
         const child = spawn(shell, [process.platform === "win32" ? "-Command" : "-c", cmd], {
           cwd,
           detached: true,
           stdio: 'ignore'
         });
-
         if (child.pid) {
           backgroundProcesses.set(child.pid, { process: child, command: cmd, startTime: new Date() });
-          
-          child.on('exit', (code) => {
-            console.error(`Background process ${child.pid} exited with code ${code}`);
-            if (child.pid) backgroundProcesses.delete(child.pid);
-          });
-
           return { content: [{ type: "text", text: `Background process started. PID: ${child.pid}` }] };
-        } else {
-          throw new Error("Failed to start background process (no PID returned)");
         }
+        throw new Error("Failed to start background process");
       }
 
-      case "get_process_status": {
-        const pid = Number(args?.pid);
-        const exists = backgroundProcesses.has(pid);
-        if (exists) {
-          const info = backgroundProcesses.get(pid)!;
-          return { content: [{ type: "text", text: `Process ${pid} is RUNNING. (Command: ${info.command}, Started: ${info.startTime})` }] };
-        }
-        
-        // Check if process exists in OS but not in our map (might have finished)
+      case "lms_status": {
         try {
-          process.kill(pid, 0);
-          return { content: [{ type: "text", text: `Process ${pid} is RUNNING (External to agent or map lost).` }] };
+          const res = await fetch("http://localhost:1234/api/v0/models");
+          if (res.ok) return { content: [{ type: "text", text: "LM Studio Server is RUNNING and reachable." }] };
+          return { content: [{ type: "text", text: "LM Studio Server is UNREACHABLE." }] };
         } catch (e) {
-          return { content: [{ type: "text", text: `Process ${pid} is NOT RUNNING.` }] };
+          return { content: [{ type: "text", text: "LM Studio Server is NOT RUNNING." }] };
         }
       }
 
-      case "stop_process": {
-        const pid = Number(args?.pid);
-        try {
-          process.kill(pid, 'SIGTERM');
-          backgroundProcesses.delete(pid);
-          return { content: [{ type: "text", text: `Sent SIGTERM to process ${pid}` }] };
-        } catch (e: any) {
-          return { content: [{ type: "text", text: `Error killing process ${pid}: ${e.message}` }], isError: true };
+      case "lms_start": {
+        if (process.platform === "win32") {
+          // Standard Windows path for LM Studio
+          const lmsPath = path.join(os.homedir(), "AppData", "Local", "Programs", "LM-Studio", "LM Studio.exe");
+          spawn(lmsPath, { detached: true, stdio: 'ignore' }).unref();
+          return { content: [{ type: "text", text: "Sent start command to LM Studio. It may take a moment to initialize." }] };
         }
-      }
-
-      case "list_background_processes": {
-        if (backgroundProcesses.size === 0) return { content: [{ type: "text", text: "No active background processes." }] };
-        const list = Array.from(backgroundProcesses.entries())
-          .map(([pid, info]) => `PID: ${pid} | Command: ${info.command} | Started: ${info.startTime.toISOString()}`)
-          .join("\n");
-        return { content: [{ type: "text", text: list }] };
+        return { content: [{ type: "text", text: "Auto-start is only implemented for Windows in this version." }], isError: true };
       }
 
       default:
@@ -221,7 +191,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function run() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("LMS System Agent MCP Server running on stdio");
+  console.error("LMS Tasker MCP Server (v2.2.0) running on stdio");
 }
 
 run().catch((error) => {
