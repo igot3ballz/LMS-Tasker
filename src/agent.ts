@@ -1,4 +1,4 @@
-import { Chat, tool, llm } from "@lmstudio/sdk";
+import lms, { Chat, tool } from "@lmstudio/sdk";
 import { z } from "zod";
 import * as fs from "fs/promises";
 import * as path from "path";
@@ -89,7 +89,7 @@ export class SystemAgent {
     this.history.addUserMessage(`GOAL: ${goal}`);
     
     try {
-      this.model = await llm(this.modelIdentifier);
+      this.model = await lms.llm(this.modelIdentifier);
       
       let step = 0;
       let finished = false;
