@@ -1,0 +1,13 @@
+{
+  "name": "lms-tasker",
+  "version": "1.0.0",
+  "description": "A fully-featured FastMCP server that turns LM Studio into a set of powerful tools for Gemini CLI.",
+  "mcpServers": {
+    "lms-tasker": {
+      "command": "python",
+      "args": ["-m", "src.server"],
+      "cwd": "${extensionPath}"
+    }
+  },
+  "contextFileName": "README.md"
+}

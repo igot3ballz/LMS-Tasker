@@ -1,58 +1,48 @@
-# LM Studio System Agent & MCP (Overhaul v2.1)
+# LMS-Tasker v2.2 (TypeScript Edition)
 
-A high-performance, unified TypeScript ecosystem for LM Studio. This project combines a **"God Mode" MCP Server** for the LM Studio GUI with a standalone **Autonomous Agent** for terminal-based task execution.
+A high-performance system orchestration ecosystem for LM Studio. `LMS-Tasker` has been completely rebuilt in TypeScript to provide a stable, "God Mode" interface for local LLMs to control the operating system.
 
 ## 🚀 Key Features
-- **TypeScript Core:** Built with `@lmstudio/sdk` (v1.5.0) for maximum stability.
-- **God Mode MCP:** Grants LM Studio GUI direct access to:
-  - Recursive file/folder operations.
-  - Background process management (PIDs).
-  - Unrestricted shell execution (PowerShell/Bash).
-- **Standalone Agent (`Local Jules`):** An autonomous terminal agent that uses the same system-level tools.
+- **Unified Core:** One codebase for both the **MCP Server** (LM Studio GUI) and the **Autonomous CLI Agent**.
+- **God Mode Capabilities:**
+  - **Full Filesystem Access:** Read, write, move, and recursive delete.
+  - **Terminal Access:** Unrestricted PowerShell/Bash execution.
+  - **Async Process Management:** Start background tasks and track them via **Process IDs (PIDs)**.
+- **Native Stability:** Built on `@lmstudio/sdk` (v1.5.0) for the most reliable local LLM interaction.
 
 ## 🏗 Project Structure
-- `src/index.ts`: The MCP Server (Stdio transport).
-- `src/agent.ts`: Core logic for the autonomous agent.
-- `src/cli.ts`: Terminal interface to start tasks.
-- `install.js`: Automated installer for the LM Studio GUI configuration.
+- `src/index.ts`: The MCP Server (God Mode for GUI).
+- `src/agent.ts`: The Autonomous Agent logic (`Local Jules`).
+- `src/cli.ts`: The command-line interface for starting tasks.
+- `install.js`: The automated registry script for LM Studio.
 
-## 🛠 Prerequisites
-- **Node.js:** v20+ recommended.
-- **LM Studio:** Server must be running on `http://localhost:1234`.
+## ⚙️ Installation
 
-## ⚙️ Installation & Setup
+1. **Install and Build:**
+   ```bash
+   cd C:\PROJECTS\LMS-Tasker
+   npm install
+   npm run build
+   ```
 
-### 1. Build and Install MCP to LM Studio GUI
+2. **Register with LM Studio GUI:**
+   ```bash
+   node install.js
+   ```
+   *Restart LM Studio to activate the new tools.*
+
+## 🧰 CLI Usage (Autonomous Agent)
+Start an autonomous task directly from your shell:
 ```bash
-npm install
-npm run build
-node install.js
-```
-*After running this, restart LM Studio. You will see `LMS-System-Agent-MCP` in the MCP tools section.*
-
-### 2. Run the Autonomous Agent (CLI)
-To start a background task directly from your terminal:
-```bash
-# Example: Create a new project folder and initialize git
-node dist/cli.js "Create a folder named 'test_project', initialize git, and write a README"
+node dist/cli.js "Create a new Python project called 'FastAPI-Demo', install fastapi and uvicorn, and write a hello world app."
 ```
 
-## 🧰 Available Tools
-| Tool | Description |
-| :--- | :--- |
-| `read_file` | Read raw file content. |
-| `write_file` | Write content (auto-creates folders). |
-| `run_command` | Execute shell commands (Blocking). |
-| `start_background_process` | Start long-running tasks (Returns PID). |
-| `get_process_status` | Check task status via PID. |
-| `complete_task` | Signal when the autonomous goal is met. |
+## ⚠️ Security Notice
+`LMS-Tasker` grants unrestricted access to your machine. It can delete data and execute system-level commands. **Use only with trusted local models and in secure environments.**
 
-## ⚠️ Security Warning
-This tool grants **UNRESTRICTED** access to your local machine. The LLM can delete files, install software, and execute system commands. **Use only with trusted local models.**
-
-## 🤝 Contribution & Git
-This project is part of the `C:\PROJECTS` ecosystem. 
+## 🤝 Git Strategy
+This project is the **Master System Bridge**. 
 To update:
-1. Edit `src/*.ts`.
+1. Modify `src/`.
 2. `npm run build`.
-3. `git commit -am "Update tools" && git push`.
+3. `git commit -am "Update system capabilities" && git push`.

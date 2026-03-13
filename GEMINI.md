@@ -1,29 +1,27 @@
-# GEMINI.md - LMS-System-Agent-MCP
+# GEMINI.md - LMS-Tasker Roadmap
 
 ## 🎯 Purpose
-A high-performance, "God Mode" TypeScript MCP (Model Context Protocol) server providing LM Studio with total control over the local operating system. It enables autonomous agents to read, write, manipulate files, and execute arbitrary shell commands.
+A high-performance system orchestration ecosystem for LM Studio. Replaces the legacy Python version with a unified TypeScript core for both MCP (GUI) and CLI (Autonomous) operations.
+
+## 🚀 Accomplishments (Phase 1: TypeScript Rebirth)
+*   **Engine Pivot:** Migrated from Python to Node.js/TypeScript for SDK stability.
+*   **God Mode Tools:** Implemented recursive file operations and unrestricted shell execution.
+*   **Process Tracking:** Added background process management with PID retrieval and status checks.
+*   **Unified Core:** Merged `LMS-Filesystem-MCP` into `LMS-Tasker` as the new standard.
+*   **Auto-Installer:** Created `install.js` for one-click LM Studio registry.
 
 ## 🏗 Architecture
 - **Framework:** `@modelcontextprotocol/sdk` (TypeScript)
+- **SDK:** `@lmstudio/sdk` (v1.5.0)
 - **Runtime:** Node.js (ESModules)
-- **Transport:** Stdio (Standard Input/Output)
-- **Capabilities (Tools):**
-  - `read_file`: Content-addressed file reading.
-  - `write_file`: Directory-aware file creation/modification.
-  - `list_directory`: Folder structure exploration.
-  - `get_file_info`: Metadata retrieval (size, modified dates).
-  - `delete_item`: Destructive file and folder removal.
-  - `move_item`: Renaming and path shifting.
-  - `run_shell_command`: Unrestricted terminal access (PowerShell/Bash).
+- **Agent Name:** `Local Jules`
 
-## 🚀 Status (Phase 2: God Mode Expansion)
-- Project transitioned from basic filesystem to full system agent.
-- `src/index.ts` expanded with `child_process` execution.
-- Build system verified (`npm run build`).
+## 🔜 Future Goals
+*   **Persistence:** Implement a local database (SQLite) to track long-running task PIDs across system reboots.
+*   **Web Orchestration:** Integrate search tools (Brave/Google) to allow the agent to research while it codes.
+*   **Self-Updating:** Add a CLI command for the agent to update its own source code when new SDK versions are released.
 
-## ⚠️ SECURITY WARNING
-By registering this MCP server in LM Studio, you are granting the LLM **unrestricted access** to your local machine. It can delete files, execute malicious commands, and alter system states if prompted to do so. Ensure you only use trusted models and sandboxed prompts when this server is active.
-
-## 🔌 Connection String (LM Studio GUI)
-- **Command:** `node`
-- **Arguments:** `C:\PROJECTS\LMS-Filesystem-MCP\dist\index.js`
+## 📂 Active Directories
+*   **Root:** `C:\PROJECTS\LMS-Tasker`
+*   **Source:** `src/`
+*   **Build:** `dist/`

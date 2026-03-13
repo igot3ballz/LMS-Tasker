@@ -1,6 +1,6 @@
 {
-  "name": "lms-filesystem-mcp",
-  "version": "1.0.0",
+  "name": "lms-tasker",
+  "version": "2.2.0",
   "description": "",
   "main": "index.js",
   "type": "module",
