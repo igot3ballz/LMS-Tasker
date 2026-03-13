@@ -1,4 +1,4 @@
-# LMS-Tasker v2.2 (TypeScript Edition)
+# LMS-Tasker v2.2 (Gemini-CLI)
 
 A high-performance system orchestration ecosystem for LM Studio. `LMS-Tasker` has been completely rebuilt in TypeScript to provide a stable, "God Mode" interface for local LLMs to control the operating system.
 
