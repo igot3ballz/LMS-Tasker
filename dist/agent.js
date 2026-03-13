@@ -1,4 +1,4 @@
-import { lmstudio, Chat, tool } from "@lmstudio/sdk";
+import { Chat, tool, llm } from "@lmstudio/sdk";
 import { z } from "zod";
 import * as fs from "fs/promises";
 import * as path from "path";
@@ -8,13 +8,13 @@ const execAsync = promisify(exec);
 export class SystemAgent {
     modelIdentifier;
     systemPrompt;
-    client;
     model;
     history;
     tools;
     constructor(modelIdentifier, systemPrompt) {
         this.modelIdentifier = modelIdentifier;
         this.systemPrompt = systemPrompt;
+        // @ts-ignore
         this.history = new Chat(this.systemPrompt);
         this.tools = this.initializeTools();
     }
@@ -23,7 +23,9 @@ export class SystemAgent {
             tool({
                 name: "read_file",
                 description: "Read the content of a file",
-                parameters: z.object({ path: z.string() }),
+                parameters: {
+                    path: z.string()
+                },
                 implementation: async ({ path }) => {
                     try {
                         return await fs.readFile(path, "utf-8");
@@ -36,7 +38,10 @@ export class SystemAgent {
             tool({
                 name: "write_file",
                 description: "Write content to a file. Creates directories if needed.",
-                parameters: z.object({ path: z.string(), content: z.string() }),
+                parameters: {
+                    path: z.string(),
+                    content: z.string()
+                },
                 implementation: async ({ path: filePath, content }) => {
                     try {
                         await fs.mkdir(path.dirname(filePath), { recursive: true });
@@ -51,7 +56,10 @@ export class SystemAgent {
             tool({
                 name: "run_command",
                 description: "Execute a shell command (Blocking)",
-                parameters: z.object({ command: z.string(), cwd: z.string().optional() }),
+                parameters: {
+                    command: z.string(),
+                    cwd: z.string().optional()
+                },
                 implementation: async ({ command, cwd }) => {
                     try {
                         const { stdout, stderr } = await execAsync(command, {
@@ -68,7 +76,9 @@ export class SystemAgent {
             tool({
                 name: "complete_task",
                 description: "Signal when the goal is achieved",
-                parameters: z.object({ summary: z.string() }),
+                parameters: {
+                    summary: z.string()
+                },
                 implementation: async ({ summary }) => {
                     return `TASK COMPLETE: ${summary}`;
                 },
@@ -77,16 +87,17 @@ export class SystemAgent {
     }
     async run(goal) {
         console.log(`\n--- STARTING TASK: ${goal} ---\n`);
-        this.history.add_user_message(`GOAL: ${goal}`);
+        // @ts-ignore
+        this.history.addUserMessage(`GOAL: ${goal}`);
         try {
-            this.model = await lmstudio.llm(this.modelIdentifier);
+            this.model = await llm(this.modelIdentifier);
             let step = 0;
             let finished = false;
             while (step < 15 && !finished) {
                 step++;
                 console.log(`\n[STEP ${step}] Thinking...`);
-                const result = await this.model.act(this.history, { tools: this.tools });
-                // Check for task completion in history
+                await this.model.act(this.history, { tools: this.tools });
+                // @ts-ignore
                 const lastMessage = this.history.messages[this.history.messages.length - 1];
                 if (lastMessage?.content?.includes("TASK COMPLETE")) {
                     finished = true;
