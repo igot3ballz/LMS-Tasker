@@ -1,27 +1,31 @@
 # GEMINI.md - LMS-Tasker Roadmap
 
-## 🎯 Purpose
-A high-performance system orchestration ecosystem for LM Studio. Replaces the legacy Python version with a unified TypeScript core for both MCP (GUI) and CLI (Autonomous) operations.
+## 🎯 Strategic Objective
+A unified, high-speed system orchestration bridge between LM Studio and the local OS, enabling autonomous development and administration.
 
-## 🚀 Accomplishments (Phase 1: TypeScript Rebirth)
-*   **Engine Pivot:** Migrated from Python to Node.js/TypeScript for SDK stability.
-*   **God Mode Tools:** Implemented recursive file operations and unrestricted shell execution.
-*   **Process Tracking:** Added background process management with PID retrieval and status checks.
-*   **Unified Core:** Merged `LMS-Filesystem-MCP` into `LMS-Tasker` as the new standard.
-*   **Auto-Installer:** Created `install.js` for one-click LM Studio registry.
+## 🚀 Accomplishments (Phase 2: TypeScript God Mode)
+*   **Engine Migration:** Successfully transitioned from Python to TypeScript/Node.js for SDK stability.
+*   **Unified Architecture:** Merged `LMS-Filesystem-MCP` into `LMS-Tasker` to handle both Stdio (MCP) and SDK (Agent) transports.
+*   **"God Mode" Toolset:**
+    *   `run_shell_command`: Unrestricted terminal access.
+    *   `start_background_process`: Async execution with PID retrieval.
+    *   `get_process_status`: Multi-turn monitoring of background tasks.
+    *   `lms_start` / `lms_status`: Environment self-healing.
+*   **Auto-Installation:** Created `install.js` for seamless LM Studio GUI registry.
+*   **Gemini Bridge:** Fully configured `gemini-extension.json` for CLI orchestration.
 
-## 🏗 Architecture
+## 🏗 Technical Stack
 - **Framework:** `@modelcontextprotocol/sdk` (TypeScript)
 - **SDK:** `@lmstudio/sdk` (v1.5.0)
 - **Runtime:** Node.js (ESModules)
-- **Agent Name:** `Local Jules`
+- **Primary Agent:** `Local Jules`
 
-## 🔜 Future Goals
-*   **Persistence:** Implement a local database (SQLite) to track long-running task PIDs across system reboots.
-*   **Web Orchestration:** Integrate search tools (Brave/Google) to allow the agent to research while it codes.
-*   **Self-Updating:** Add a CLI command for the agent to update its own source code when new SDK versions are released.
+## 🔜 Current Goals
+*   **Persistence Layer:** Implement a lightweight local state (SQLite or JSON) to track PIDs across reboots.
+*   **Tool Expansion:** Add `git` specialized tools (clone, commit, push) to reduce shell command overhead.
+*   **Security Filtering:** Propose a "Safety Profile" system to restrict commands in high-risk environments.
 
-## 📂 Active Directories
-*   **Root:** `C:\PROJECTS\LMS-Tasker`
+## 📂 Directories
 *   **Source:** `src/`
-*   **Build:** `dist/`
+*   **Registry:** `install.js`
+*   **Bridge:** `gemini-extension.json`
