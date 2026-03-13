@@ -1,11 +1,11 @@
 {
   "name": "lms-tasker",
-  "version": "1.0.0",
-  "description": "A fully-featured FastMCP server that turns LM Studio into a set of powerful tools for Gemini CLI.",
+  "version": "2.2.0",
+  "description": "High-performance God-Mode System Agent for LM Studio. Bridging Gemini CLI to local LLM system tools.",
   "mcpServers": {
     "lms-tasker": {
-      "command": "python",
-      "args": ["-m", "src.server"],
+      "command": "node",
+      "args": ["dist/index.js"],
       "cwd": "${extensionPath}"
     }
   },
