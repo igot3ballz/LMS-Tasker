@@ -47,7 +47,7 @@ To allow Gemini CLI to orchestrate tasks via LM Studio:
 gemini extensions uninstall lms-tasker
 
 # Install the overhauled version:
-gemini extensions install C:\PROJECTS\LMS-Tasker
+gemini extensions install ~\LMS-Tasker
 ```
 
 ## 🧰 Usage Examples
